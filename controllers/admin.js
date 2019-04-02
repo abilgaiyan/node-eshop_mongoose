@@ -4,7 +4,8 @@ exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
-    editing: false
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -31,19 +32,6 @@ exports.postAddProduct = (req, res, next) => {
         console.log(err);
       });
     
-  //  req.user.createProduct({
-  //   title: title,
-  //   price: price,
-  //   imageUrl: imageUrl,
-  //   description: description
-  //  })
-  //  .then(result => {
-  //    // console.log(result);
-  //    console.log('New product created');
-  //    res.redirect('/admin/products');
-  //  }).catch(err => {
-  //    console.log(err);
-  //  });
   
 };
 
@@ -62,7 +50,8 @@ exports.getEditProduct = (req, res, next) => {
       pageTitle: 'Edit Product',
       path: '/admin/edit-product',
       editing: editMode,
-      product: product
+      product: product,
+      isAuthenticated: req.session.isLoggedIn
     })
    }
   )
@@ -107,7 +96,8 @@ exports.getProducts = (req, res, next) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
-      path: '/admin/products'
+      path: '/admin/products',
+      isAuthenticated: req.session.isLoggedIn
     });
      
   })
@@ -128,19 +118,7 @@ exports.postDeleteProduct = (req, res, next) => {
   .catch(err => {
     console.log(err);
   }) ;
-  // Product.findByPk(prodId)
-  //        .then(product =>{
-  //          return product.destroy();
-  //        })
-  //        .then(result =>{
-  //          console.log('Product Deleted....');
-  //          res.redirect('/admin/products');
-
-  //        })
-  //        .catch(err => {
-  //          console.log(err);
-  //        });
-
+  
 
   
  };
