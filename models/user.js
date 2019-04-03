@@ -10,6 +10,16 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  password:{
+    type: String,
+    required: true
+  },
+  active:{
+    type:Boolean,
+    required:false,
+    default:false
+  },
+
   cart:{ 
     items:[
       {
