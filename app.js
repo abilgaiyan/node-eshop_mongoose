@@ -8,7 +8,8 @@ const MongoDbSession = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const errorController = require('./controllers/error');
 const mongooseConnect = require('./util/database');
-
+const csrfProtection = csrf();
+const flash = require('connect-flash');
 const User = require('./models/user');
 
 const app = express();
@@ -17,7 +18,7 @@ const store = new MongoDbSession({
   collection: 'mysession'
 });
 
-const csrfProtection = csrf();
+
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -40,7 +41,7 @@ app.use(
     })
   );
 
-  app.use(csrfProtection);
+  
 // add a middleware to add a user with request. 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -54,6 +55,8 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 
+app.use(csrfProtection);
+app.use(flash());
 app.use((req,res,next)=>{
 
   res.locals.isAuthenticated = req.session.isLoggedIn ?req.session.isLoggedIn : false ;
