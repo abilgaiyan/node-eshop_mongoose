@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDbSession = require('connect-mongodb-session')(session);
-
+const csrf = require('csurf');
 const errorController = require('./controllers/error');
 const mongooseConnect = require('./util/database');
 
@@ -17,12 +17,15 @@ const store = new MongoDbSession({
   collection: 'mysession'
 });
 
+const csrfProtection = csrf();
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -37,7 +40,7 @@ app.use(
     })
   );
 
-
+  app.use(csrfProtection);
 // add a middleware to add a user with request. 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -50,6 +53,13 @@ app.use((req, res, next) => {
     })
     .catch(err => console.log(err));
 });
+
+app.use((req,res,next)=>{
+
+  res.locals.isAuthenticated = req.session.isLoggedIn ?req.session.isLoggedIn : false ;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
