@@ -1,5 +1,17 @@
+const nodemailer = require('nodemailer');
+const sgTransport = require('nodemailer-sendgrid-transport');
 const bcrypt = require('bcryptjs');
+const configKeys = require('../config/dev.key');
 
+const sgoptions ={
+  auth:{
+    api_key: configKeys.SEND_GRID_API_KEY
+  }
+};
+
+
+
+const client = nodemailer.createTransport(sgTransport(sgoptions));
 const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
@@ -62,6 +74,7 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.postSignup = (req, res, next) => {
+  const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
@@ -75,6 +88,7 @@ exports.postSignup = (req, res, next) => {
         .hash(password, 12)
         .then(hashedPassword => {
           const user = new User({
+            name: name,
             email: email,
             password: hashedPassword,
             cart: { items: [] }
@@ -82,7 +96,20 @@ exports.postSignup = (req, res, next) => {
           return user.save();
         })
         .then(result => {
-          res.redirect('/login');
+          const defineEmail = {
+            from: 'test@eshop.com',
+            to: email,
+            subject: 'New user created',
+            text: 'New user created',
+            html: '<b>New user created</b>'
+          };
+          client.sendMail(defineEmail, (err,info)=>{
+            if (err){
+              console.log(err);
+            }
+            res.redirect('/login');  
+          })
+          
         });
     })
     .catch(err => {
