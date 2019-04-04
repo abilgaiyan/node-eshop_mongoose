@@ -192,7 +192,7 @@ exports.getNewPassword = (req, res, next) => {
   User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
     .then(user => {
       if (!user){
-        req.flash('error', 'Your reset password is link invalid. Try Again');
+        req.flash('error', 'Your reset password link is invalid. Try Again');
        return res.redirect('/login');
       }
       let message = req.flash('error');
