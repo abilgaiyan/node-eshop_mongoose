@@ -131,8 +131,9 @@ exports.postOrder =(req,res,next) => {
     })  
     .then(result =>{
       //console.log(result);
-        req.user.cart = {items:[]};
-        return req.user.save();
+      // clear the basket
+      //req.user.cart = {items:[]};
+      return req.user.clearCart();
       
     })
     .then(result=>{

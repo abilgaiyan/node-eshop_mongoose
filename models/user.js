@@ -19,6 +19,8 @@ const userSchema = new Schema({
     required:false,
     default:false
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
 
   cart:{ 
     items:[
@@ -59,4 +61,9 @@ userSchema.methods.deleteProductFromCart = function(productId){
     return this.save();
   }
 
+  userSchema.methods.clearCart = function() {
+    this.cart = { items: [] };
+    return this.save();
+  };
+  
 module.exports = mongoose.model('User',userSchema);
