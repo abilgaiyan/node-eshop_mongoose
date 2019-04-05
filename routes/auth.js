@@ -1,5 +1,6 @@
 const express = require('express');
 
+const authValidator = require('../middleware/authValidator');
 const authController = require('../controllers/auth');
 
 const router = express.Router();
@@ -8,9 +9,9 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post('/login',authValidator.login, authController.postLogin);
 
-router.post('/signup', authController.postSignup);
+router.post('/signup', authValidator.signUp, authController.postSignup);
 
 router.post('/logout', authController.postLogout);
 

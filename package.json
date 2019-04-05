@@ -22,6 +22,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "express-validator": "^5.3.1",
     "mongodb": "^3.2.2",
     "mongoose": "^5.4.20",
     "nodemailer": "^6.0.0",
